@@ -1,0 +1,20 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: instrumentation
+  namespace: default
+spec:
+  nodejs:
+    env:
+      - name: OTEL_NODE_DISABLED_INSTRUMENTATIONS
+        value: fs
+      - name: OTEL_NODE_RESOURCE_DETECTORS
+        value: all  
+  exporter:
+    endpoint: "http://opentelemetrycollector.monitoring.svc.cluster.local:4318"
+  propagators:
+    - tracecontext
+    - baggage
+  sampler:
+    type: parentbased_traceidratio
+    argument: "1"
